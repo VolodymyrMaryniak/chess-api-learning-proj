@@ -35,11 +35,11 @@ public class PlayerService(IPlayerRepository repository) : IPlayerService
         if (existingPlayerWithUserName is not null)
             return Result<PlayerResponseDto>.Failed(ErrorsFactory.UserAlreadyExistsError);
 
-        var entity = PlayerMapper.ToEntity(createPlayerRequestDto);
+        var document = PlayerMapper.ToDocument(createPlayerRequestDto);
 
-        var createdEntity = await repository.CreateAsync(entity);
+        var createdDocument = await repository.CreateAsync(document);
 
-        var playerDto = PlayerMapper.ToDto(createdEntity);
+        var playerDto = PlayerMapper.ToDto(createdDocument);
         var responseDto = new PlayerResponseDto { Player = playerDto };
         return Result<PlayerResponseDto>.Success(responseDto);
     }

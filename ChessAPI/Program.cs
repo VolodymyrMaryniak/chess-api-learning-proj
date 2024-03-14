@@ -1,3 +1,4 @@
+using ChessAPI.Data.Conventions;
 using ChessAPI.Data.Schema;
 using ChessAPI.Extensions;
 
@@ -10,6 +11,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddControllers();
+
+MongoDbConventions.RegisterMongoDbConventions();
 
 var app = builder.Build();
 

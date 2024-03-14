@@ -14,11 +14,11 @@ public class PlayerController(IPlayerService playerService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetPlayer([FromRoute] string id)
     {
-        var result = await playerService.GetPlayerByIdAsync(id);
-        if (result is null)
+        var playerResponseDto = await playerService.GetPlayerByIdAsync(id);
+        if (playerResponseDto is null)
             return NotFound();
 
-        return Ok(result);
+        return Ok(playerResponseDto);
     }
     
     [HttpGet("username/{userName}")]
@@ -26,11 +26,11 @@ public class PlayerController(IPlayerService playerService) : ControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetPlayerByUserName([FromRoute] string userName)
     {
-        var result = await playerService.GetPlayerByUserNameAsync(userName);
-        if (result is null)
+        var playerResponseDto = await playerService.GetPlayerByUserNameAsync(userName);
+        if (playerResponseDto is null)
             return NotFound();
 
-        return Ok(result);
+        return Ok(playerResponseDto);
     }
 
     [HttpPost]

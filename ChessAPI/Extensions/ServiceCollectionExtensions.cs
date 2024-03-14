@@ -31,12 +31,13 @@ public static class ServiceCollectionExtensions
 
         // Register repositories
         services.AddScoped<IPlayerRepository, PlayerRepository>();
-        services.AddRepository<Player>(CollectionNames.Players);
+        services.AddRepository<Game>(CollectionNames.Games);
     }
 
     public static void AddServices(this IServiceCollection services)
     {
-        services.AddScoped<IPlayerService, PlayerService>();
+        services.AddTransient<IPlayerService, PlayerService>();
+        services.AddTransient<IGameService, GameService>();
     }
 
     private static void AddRepository<TEntity>(this IServiceCollection services, string collectionName)
