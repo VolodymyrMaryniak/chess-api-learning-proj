@@ -7,4 +7,5 @@ public interface IRepository<TEntity>
 {
     Task<TEntity?> FindAsync(string id);
     Task<TEntity> CreateAsync(TEntity entity);
+    Task<TEntity> UpdateAsync(TEntity entity);
 }

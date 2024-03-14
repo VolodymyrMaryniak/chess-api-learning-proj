@@ -33,7 +33,7 @@ public class PlayerService(IPlayerRepository repository) : IPlayerService
     {
         var existingPlayerWithUserName = await repository.FindByUserNameAsync(createPlayerRequestDto.UserName);
         if (existingPlayerWithUserName is not null)
-            return Result<PlayerResponseDto>.Failed(ErrorsFactory.UserAlreadyExistsError);
+            return Result<PlayerResponseDto>.Failed(ErrorsFactory.UserNameUniquenessError);
 
         var document = PlayerMapper.ToDocument(createPlayerRequestDto);
 

@@ -19,4 +19,10 @@ public abstract class Repository<TEntity>(IMongoDatabase database) : IRepository
         await database.GetCollection<TEntity>(CollectionName).InsertOneAsync(entity);
         return entity;
     }
+    
+    public async Task<TEntity> UpdateAsync(TEntity entity)
+    {
+        await Collection.ReplaceOneAsync(e => e.Id == entity.Id, entity);
+        return entity;
+    }
 }
