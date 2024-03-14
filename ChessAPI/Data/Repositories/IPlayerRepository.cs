@@ -1,4 +1,4 @@
-﻿using ChessAPI.Data.EntityModels;
+﻿using ChessAPI.Data.DocumentModels;
 
 namespace ChessAPI.Data.Repositories;
 

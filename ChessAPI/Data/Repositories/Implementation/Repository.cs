@@ -1,10 +1,10 @@
-﻿using ChessAPI.Data.EntityModels.Shared;
+﻿using ChessAPI.Data.DocumentModels.Shared;
 using MongoDB.Driver;
 
 namespace ChessAPI.Data.Repositories.Implementation;
 
 public abstract class Repository<TEntity>(IMongoDatabase database) : IRepository<TEntity>
-    where TEntity : Entity
+    where TEntity : Document
 {
     protected abstract string CollectionName { get; }
     protected IMongoCollection<TEntity> Collection => database.GetCollection<TEntity>(CollectionName);

@@ -1,4 +1,4 @@
-﻿using ChessAPI.Data.EntityModels;
+﻿using ChessAPI.Data.DocumentModels;
 using MongoDB.Driver;
 
 namespace ChessAPI.Data.Schema;

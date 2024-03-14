@@ -1,6 +1,6 @@
 ﻿using ChessAPI.Constants;
-using ChessAPI.Data.EntityModels;
-using ChessAPI.Data.EntityModels.Shared;
+using ChessAPI.Data.DocumentModels;
+using ChessAPI.Data.DocumentModels.Shared;
 using ChessAPI.Data.Repositories;
 using ChessAPI.Data.Repositories.Implementation;
 using ChessAPI.Data.Schema;
@@ -40,7 +40,7 @@ public static class ServiceCollectionExtensions
     }
 
     private static void AddRepository<TEntity>(this IServiceCollection services, string collectionName)
-        where TEntity : Entity
+        where TEntity : Document
     {
         services.AddScoped<IRepository<TEntity>>(sp =>
         {

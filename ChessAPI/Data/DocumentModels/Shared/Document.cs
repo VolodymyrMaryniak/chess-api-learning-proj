@@ -1,9 +1,9 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace ChessAPI.Data.EntityModels.Shared;
+namespace ChessAPI.Data.DocumentModels.Shared;
 
-public abstract class Entity
+public abstract class Document
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]

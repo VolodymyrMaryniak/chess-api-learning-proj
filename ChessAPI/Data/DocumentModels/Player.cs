@@ -1,9 +1,9 @@
-﻿using ChessAPI.Data.EntityModels.Shared;
+﻿using ChessAPI.Data.DocumentModels.Shared;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace ChessAPI.Data.EntityModels;
+namespace ChessAPI.Data.DocumentModels;
 
-public class Player : Entity
+public class Player : Document
 {
     [BsonElement("user_name")] public required string UserName { get; set; }
 

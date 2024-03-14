@@ -1,4 +1,4 @@
-﻿using ChessAPI.Data.EntityModels;
+﻿using ChessAPI.Data.DocumentModels;
 using ChessAPI.Models.Dto.Player;
 using ChessAPI.Models.Dto.Player.Requests;
 using Riok.Mapperly.Abstractions;
