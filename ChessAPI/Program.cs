@@ -1,3 +1,4 @@
+using ChessAPI.Data.Schema;
 using ChessAPI.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,8 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
+await EnsureSchemaAppliedAsync(app);
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -23,3 +26,11 @@ app.UseHttpsRedirection();
 app.MapControllers();
 
 app.Run();
+return;
+
+async Task EnsureSchemaAppliedAsync(IHost host)
+{
+    await using var scope = host.Services.CreateAsyncScope();
+    var schemaManager = scope.ServiceProvider.GetRequiredService<ChessDbSchemaManager>();
+    await schemaManager.EnsureSchemaAppliedAsync();
+}

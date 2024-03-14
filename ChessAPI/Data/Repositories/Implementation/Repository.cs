@@ -11,9 +11,6 @@ public abstract class Repository<TEntity>(IMongoDatabase database) : IRepository
 
     public async Task<TEntity?> FindAsync(string id)
     {
-        // TODO: Check which one is better
-        // return await Collection.Find(Builders<TEntity>.Filter.Eq("_id", id)).FirstOrDefaultAsync();
-
         return await Collection.Find(entity => entity.Id == id).FirstOrDefaultAsync();
     }
     
