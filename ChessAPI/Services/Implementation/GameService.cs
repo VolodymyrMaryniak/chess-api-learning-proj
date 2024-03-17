@@ -1,6 +1,7 @@
 ﻿using ChessAPI.Data.DocumentModels;
 using ChessAPI.Data.Repositories;
 using ChessAPI.Errors;
+using ChessAPI.Extensions;
 using ChessAPI.Mapping;
 using ChessAPI.Models;
 using ChessAPI.Models.Dto.Game.Requests;
@@ -33,15 +34,15 @@ public class GameService(IRepository<Game> repository) : IGameService
     {
         var game = await repository.FindAsync(id);
         if (game is null)
-            return Result<GameResponseDto>.Failed(ErrorsFactory.GameNotFoundError);
-        
+            return ErrorsFactory.GameNotFoundError.ToErrorResult<GameResponseDto>();
+
         if (game.StartedAt is not null)
-            return Result<GameResponseDto>.Failed(ErrorsFactory.GameAlreadyStartedError);
+            return ErrorsFactory.GameAlreadyStartedError.ToErrorResult<GameResponseDto>();
         
         game.StartedAt = DateTime.UtcNow;
         game = await repository.UpdateAsync(game);
         
-        var gameDto = GameMapper.ToDto(game);
-        return Result<GameResponseDto>.Success(new GameResponseDto { Game = gameDto });
+        var gameResponseDto = new GameResponseDto { Game = GameMapper.ToDto(game) };
+        return gameResponseDto.ToSuccessResult();
     }
 }

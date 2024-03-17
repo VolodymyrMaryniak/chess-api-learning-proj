@@ -1,5 +1,6 @@
 ﻿using ChessAPI.Data.Repositories;
 using ChessAPI.Errors;
+using ChessAPI.Extensions;
 using ChessAPI.Mapping;
 using ChessAPI.Models;
 using ChessAPI.Models.Dto.Player.Requests;
@@ -33,7 +34,7 @@ public class PlayerService(IPlayerRepository repository) : IPlayerService
     {
         var existingPlayerWithUserName = await repository.FindByUserNameAsync(createPlayerRequestDto.UserName);
         if (existingPlayerWithUserName is not null)
-            return Result<PlayerResponseDto>.Failed(ErrorsFactory.UserNameUniquenessError);
+            return ErrorsFactory.UserNameUniquenessError.ToErrorResult<PlayerResponseDto>();
 
         var document = PlayerMapper.ToDocument(createPlayerRequestDto);
 
@@ -41,6 +42,6 @@ public class PlayerService(IPlayerRepository repository) : IPlayerService
 
         var playerDto = PlayerMapper.ToDto(createdDocument);
         var responseDto = new PlayerResponseDto { Player = playerDto };
-        return Result<PlayerResponseDto>.Success(responseDto);
+        return responseDto.ToSuccessResult();
     }
 }
