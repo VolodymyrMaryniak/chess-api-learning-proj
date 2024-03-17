@@ -1,6 +1,4 @@
 ﻿using ChessAPI.Constants;
-using ChessAPI.Data.DocumentModels;
-using ChessAPI.Data.DocumentModels.Shared;
 using ChessAPI.Data.Repositories;
 using ChessAPI.Data.Repositories.Implementation;
 using ChessAPI.Data.Schema;
@@ -31,22 +29,12 @@ public static class ServiceCollectionExtensions
 
         // Register repositories
         services.AddScoped<IPlayerRepository, PlayerRepository>();
-        services.AddRepository<Game>(CollectionNames.Games);
+        services.AddScoped<IGameRepository, GameRepository>();
     }
 
     public static void AddServices(this IServiceCollection services)
     {
         services.AddTransient<IPlayerService, PlayerService>();
         services.AddTransient<IGameService, GameService>();
-    }
-
-    private static void AddRepository<TEntity>(this IServiceCollection services, string collectionName)
-        where TEntity : Document
-    {
-        services.AddScoped<IRepository<TEntity>>(sp =>
-        {
-            var database = sp.GetRequiredService<IMongoDatabase>();
-            return new GenericRepository<TEntity>(database, collectionName);
-        });
     }
 }

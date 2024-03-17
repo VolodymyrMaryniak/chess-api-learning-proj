@@ -1,5 +1,4 @@
-﻿using ChessAPI.Data.DocumentModels;
-using ChessAPI.Data.Repositories;
+﻿using ChessAPI.Data.Repositories;
 using ChessAPI.Errors;
 using ChessAPI.Extensions;
 using ChessAPI.Mapping;
@@ -9,11 +8,11 @@ using ChessAPI.Models.Dto.Game.Responses;
 
 namespace ChessAPI.Services.Implementation;
 
-public class GameService(IRepository<Game> repository) : IGameService
+public class GameService(IGameRepository gameRepository) : IGameService
 {
     public async Task<GameResponseDto?> GetGameByIdAsync(string id)
     {
-        var game = await repository.FindAsync(id);
+        var game = await gameRepository.FindAsync(id);
         if (game is null)
             return null;
 
@@ -21,10 +20,20 @@ public class GameService(IRepository<Game> repository) : IGameService
         return new GameResponseDto { Game = gameDto };
     }
     
+    public async Task<DetailedGameResponseDto?> GetGameDetailsByIdAsync(string id)
+    {
+        var gameDetails = await gameRepository.GetGameDetailsAsync(id);
+        if (gameDetails is null)
+            return null;
+        
+        var gameDetailsDto = GameMapper.ToDetailsDto(gameDetails);
+        return new DetailedGameResponseDto { Game = gameDetailsDto };
+    }
+
     public async Task<GameResponseDto> CreateGameAsync(CreateGameRequestDto createGameRequestDto)
     {
         var game = GameMapper.ToDocument(createGameRequestDto);
-        var createdDocument = await repository.CreateAsync(game);
+        var createdDocument = await gameRepository.CreateAsync(game);
 
         var gameDto = GameMapper.ToDto(createdDocument);
         return new GameResponseDto { Game = gameDto };
@@ -32,7 +41,7 @@ public class GameService(IRepository<Game> repository) : IGameService
     
     public async Task<Result<GameResponseDto>> StartGameAsync(string id)
     {
-        var game = await repository.FindAsync(id);
+        var game = await gameRepository.FindAsync(id);
         if (game is null)
             return ErrorsFactory.GameNotFoundError.ToErrorResult<GameResponseDto>();
 
@@ -40,7 +49,7 @@ public class GameService(IRepository<Game> repository) : IGameService
             return ErrorsFactory.GameAlreadyStartedError.ToErrorResult<GameResponseDto>();
         
         game.StartedAt = DateTime.UtcNow;
-        game = await repository.UpdateAsync(game);
+        game = await gameRepository.UpdateAsync(game);
         
         var gameResponseDto = new GameResponseDto { Game = GameMapper.ToDto(game) };
         return gameResponseDto.ToSuccessResult();
@@ -48,7 +57,7 @@ public class GameService(IRepository<Game> repository) : IGameService
     
     public async Task<Result<GameResponseDto>> EndGameAsync(string id, EndGameRequestDto endGameRequestDto)
     {
-        var game = await repository.FindAsync(id);
+        var game = await gameRepository.FindAsync(id);
         if (game is null)
             return ErrorsFactory.GameNotFoundError.ToErrorResult<GameResponseDto>();
 
@@ -60,7 +69,7 @@ public class GameService(IRepository<Game> repository) : IGameService
         
         game.EndedAt = DateTime.UtcNow;
         game.Result = endGameRequestDto.Result;
-        game = await repository.UpdateAsync(game);
+        game = await gameRepository.UpdateAsync(game);
         
         var gameResponseDto = new GameResponseDto { Game = GameMapper.ToDto(game) };
         return gameResponseDto.ToSuccessResult();

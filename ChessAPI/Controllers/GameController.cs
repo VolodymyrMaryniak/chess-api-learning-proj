@@ -23,6 +23,20 @@ public class GameController(IGameService gameService) : ControllerBase
             _ => Ok(gameResponseDto)
         };
     }
+    
+    
+    [HttpGet("{id}/details")]
+    [ProducesResponseType(typeof(DetailedGameResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetDetailedGame([FromRoute] string id)
+    {
+        var gameDetailsResponseDto = await gameService.GetGameDetailsByIdAsync(id);
+        return gameDetailsResponseDto switch
+        {
+            null => NotFound(),
+            _ => Ok(gameDetailsResponseDto)
+        };
+    }
 
     [HttpPost]
     [ProducesResponseType(typeof(GameResponseDto), StatusCodes.Status201Created)]

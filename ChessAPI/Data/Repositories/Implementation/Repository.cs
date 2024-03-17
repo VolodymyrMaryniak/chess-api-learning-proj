@@ -3,11 +3,11 @@ using MongoDB.Driver;
 
 namespace ChessAPI.Data.Repositories.Implementation;
 
-public abstract class Repository<TEntity>(IMongoDatabase database) : IRepository<TEntity>
+public class Repository<TEntity>(IMongoDatabase database, string collectionName) : IRepository<TEntity>
     where TEntity : Document
 {
-    protected abstract string CollectionName { get; }
-    protected IMongoCollection<TEntity> Collection => database.GetCollection<TEntity>(CollectionName);
+    protected IMongoDatabase Database => database;
+    protected IMongoCollection<TEntity> Collection => Database.GetCollection<TEntity>(collectionName);
 
     public async Task<TEntity?> FindAsync(string id)
     {
@@ -16,7 +16,7 @@ public abstract class Repository<TEntity>(IMongoDatabase database) : IRepository
     
     public async Task<TEntity> CreateAsync(TEntity entity)
     {
-        await database.GetCollection<TEntity>(CollectionName).InsertOneAsync(entity);
+        await Collection.InsertOneAsync(entity);
         return entity;
     }
     

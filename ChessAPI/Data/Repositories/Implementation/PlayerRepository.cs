@@ -5,7 +5,7 @@ using MongoDB.Driver;
 namespace ChessAPI.Data.Repositories.Implementation;
 
 public class PlayerRepository(IMongoDatabase database)
-    : GenericRepository<Player>(database, CollectionNames.Players), IPlayerRepository
+    : Repository<Player>(database, CollectionNames.Players), IPlayerRepository
 {
     public async Task<Player?> FindByUserNameAsync(string userName)
     {
