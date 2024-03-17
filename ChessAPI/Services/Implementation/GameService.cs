@@ -45,4 +45,24 @@ public class GameService(IRepository<Game> repository) : IGameService
         var gameResponseDto = new GameResponseDto { Game = GameMapper.ToDto(game) };
         return gameResponseDto.ToSuccessResult();
     }
+    
+    public async Task<Result<GameResponseDto>> EndGameAsync(string id, EndGameRequestDto endGameRequestDto)
+    {
+        var game = await repository.FindAsync(id);
+        if (game is null)
+            return ErrorsFactory.GameNotFoundError.ToErrorResult<GameResponseDto>();
+
+        if (game.StartedAt is null)
+            return ErrorsFactory.GameNotStartedError.ToErrorResult<GameResponseDto>();
+        
+        if (game.EndedAt is not null)
+            return ErrorsFactory.GameAlreadyEndedError.ToErrorResult<GameResponseDto>();
+        
+        game.EndedAt = DateTime.UtcNow;
+        game.Result = endGameRequestDto.Result;
+        game = await repository.UpdateAsync(game);
+        
+        var gameResponseDto = new GameResponseDto { Game = GameMapper.ToDto(game) };
+        return gameResponseDto.ToSuccessResult();
+    }
 }

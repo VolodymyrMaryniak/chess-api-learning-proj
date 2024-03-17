@@ -33,13 +33,28 @@ public class GameController(IGameService gameService) : ControllerBase
         return CreatedAtAction(nameof(GetGame), new { id = gameResponseDto.Game.Id }, gameResponseDto);
     }
     
-    [HttpPost("{id}/start-game")]
+    [HttpPost("{id}/start")]
     [ProducesResponseType(typeof(GameResponseDto), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> StartGame([FromRoute] string id)
     {
         var result = await gameService.StartGameAsync(id);
+        return result switch
+        {
+            { IsSuccess: true } => Ok(result.Value),
+            { Error.ErrorCode: ErrorCodes.GameNotFoundError } => NotFound(),
+            _ => this.BadRequestWithErrorDetails(result.Error)
+        };
+    }
+    
+    [HttpPost("{id}/result")]
+    [ProducesResponseType(typeof(GameResponseDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> EndGame([FromRoute] string id, [FromBody] EndGameRequestDto endGameRequestDto)
+    {
+        var result = await gameService.EndGameAsync(id, endGameRequestDto);
         return result switch
         {
             { IsSuccess: true } => Ok(result.Value),

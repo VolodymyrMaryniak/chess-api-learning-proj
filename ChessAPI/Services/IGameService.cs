@@ -9,4 +9,5 @@ public interface IGameService
     Task<GameResponseDto?> GetGameByIdAsync(string id);
     Task<GameResponseDto> CreateGameAsync(CreateGameRequestDto createGameRequestDto);
     Task<Result<GameResponseDto>> StartGameAsync(string id);
+    Task<Result<GameResponseDto>> EndGameAsync(string id, EndGameRequestDto endGameRequestDto);
 }
